@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Chuy Fest</title>
+
+  <!-- Django sirve el CSS desde la carpeta static/ -->
+  <link rel="stylesheet" href="{% static 'styles.css' %}" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav id="navbar">
+    <div class="nav-brand">El Chuy Fest</div>
+    <ul class="nav-links">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#evento">Evento</a></li>
+      <li><a href="#itinerario">Itinerario</a></li>
+      <li><a href="#rsvp">RSVP</a></li>
+      <li><a href="#mensajes">Mensajes</a></li>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#preguntas">Preguntas</a></li>
+    </ul>
+    <button class="nav-cta" onclick="openSongModal()">♪ Agrega tu canción</button>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menú">&#9776;</button>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section id="inicio" class="hero">
+    <div class="hero-slides">
+      <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=1600&q=80')"></div>
+      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&q=80')"></div>
+      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1543269865-cbf427effbad?w=1600&q=80')"></div>
+      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=1600&q=80')"></div>
+      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1600&q=80')"></div>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="hero-badge">🎉 Evento especial</span>
+      <h1 class="hero-title">El Chuy Fest</h1>
+      <p class="hero-subtitle">Únete a la celebración el 15 de mayo en Guadalajara. Descubre un evento inolvidable lleno de música, alegría y momentos para compartir.</p>
+      <div class="hero-btns">
+        <a href="#rsvp" class="btn-primary">Confirmar asistencia</a>
+        <a href="#evento" class="btn-secondary">Ver detalles</a>
+      </div>
+      <div class="countdown" id="countdown">
+        <div class="count-box"><span id="cd-days">--</span><label>Días</label></div>
+        <div class="count-box"><span id="cd-hours">--</span><label>Horas</label></div>
+        <div class="count-box"><span id="cd-mins">--</span><label>Minutos</label></div>
+        <div class="count-box"><span id="cd-secs">--</span><label>Segundos</label></div>
+      </div>
+    </div>
+    <div class="hero-dots" id="hero-dots"></div>
+  </section>
+
+  <!-- ========== ACTIVIDADES CARRUSEL ========== -->
+  <section id="actividades" class="section-carousel">
+    <h2 class="section-title">Vista previa del evento</h2>
+    <div class="carousel-wrapper">
+      <button class="carousel-btn prev" id="carousel-prev">&#8592;</button>
+      <div class="carousel-stage" id="carousel-stage">
+        <!-- Cards generadas por JS con posicionamiento absoluto -->
+      </div>
+      <button class="carousel-btn next" id="carousel-next">&#8594;</button>
+    </div>
+    <div class="carousel-dots" id="carousel-dots"></div>
+  </section>
+
+  <!-- ========== DETALLES DEL EVENTO ========== -->
+  <section id="evento" class="section-details">
+    <h2 class="section-title">Detalles del evento</h2>
+    <div class="details-grid">
+      <div class="detail-card">
+        <div class="detail-icon">📅</div>
+        <h3>Fecha</h3>
+        <p>15 de Mayo, 2025</p>
+        <p class="detail-sub">A partir de las 5:00 PM</p>
+      </div>
+      <div class="detail-card">
+        <div class="detail-icon">📍</div>
+        <h3>Ubicación</h3>
+        <p>C. José María Morelos 1520</p>
+        <p class="detail-sub">Col. Americana, Zona Centro<br>44600 Guadalajara, Jal.</p>
+      </div>
+      <div class="detail-card">
+        <div class="detail-icon">⏱️</div>
+        <h3>Duración</h3>
+        <p>5 horas de fiesta</p>
+        <p class="detail-sub">5:00 PM – 11:00 PM<br>(¿Nos la seguimos en Chapú? 😉)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ITINERARIO HERO ========== -->
+  <section id="itinerario" class="section-itinerary">
+    <div class="itinerary-slides" id="itinerary-slides"></div>
+    <div class="itinerary-overlay"></div>
+    <div class="itinerary-content" id="itinerary-content"></div>
+    <div class="itinerary-dots" id="itinerary-dots"></div>
+  </section>
+
+  <!-- ========== RSVP ========== -->
+  <section id="rsvp" class="section-rsvp">
+    <div class="rsvp-container">
+      <h2 class="section-title light">¿Vas a venir?</h2>
+      <p class="rsvp-sub">Confirma tu asistencia para que podamos preparar todo para ti 🎊</p>
+      <form id="rsvp-form" class="rsvp-form">
+        <div class="form-group">
+          <label for="rsvp-name">Tu nombre completo</label>
+          <input type="text" id="rsvp-name" name="name" placeholder="Ej. María García" required />
+        </div>
+        <div class="form-group">
+          <label for="rsvp-email">Tu correo (para recibir confirmación)</label>
+          <input type="email" id="rsvp-email" name="email" placeholder="hola@correo.com" required />
+        </div>
+        <div class="form-group">
+          <label>¿Asistirás?</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <!-- El valor es "true"/"false" para que Django lo entienda como BooleanField -->
+              <input type="radio" name="attending" value="true" required /> Sí, ahí estaré 🎉
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="attending" value="false" /> No podré ir 😢
+            </label>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary full">Confirmar asistencia</button>
+      </form>
+      <div id="rsvp-success" class="rsvp-success hidden">
+        ✅ ¡Gracias! Tu respuesta fue registrada. Revisa tu correo 💌
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MENSAJES ========== -->
+  <section id="mensajes" class="section-messages">
+    <h2 class="section-title">Mensajes para Chuy</h2>
+    <div class="messages-container">
+      <form id="message-form" class="message-form">
+        <input type="text" id="msg-name" placeholder="Tu nombre" maxlength="50" required />
+        <textarea id="msg-text" placeholder="Escribe tu mensaje..." maxlength="280" required></textarea>
+        <button type="submit" class="btn-primary">Enviar mensaje</button>
+      </form>
+      <div class="messages-grid" id="messages-grid"></div>
+    </div>
+  </section>
+
+  <!-- ========== GALERÍA ========== -->
+  <section id="galeria" class="section-gallery">
+    <h2 class="section-title">Galería de recuerdos</h2>
+    <p class="gallery-sub">Las fotos del evento aparecerán aquí después de la celebración 📸</p>
+    <div class="gallery-upload-area" id="gallery-upload-area">
+      <input type="file" id="gallery-input" accept="image/*" multiple style="display:none" />
+      <div class="gallery-placeholder" onclick="document.getElementById('gallery-input').click()">
+        <span class="gallery-icon">📷</span>
+        <p>Haz clic para subir fotos del evento</p>
+        <p class="gallery-hint">JPG, PNG – Máx. 10MB por foto</p>
+      </div>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </section>
+
+  <!-- ========== PREGUNTAS FRECUENTES ========== -->
+  <section id="preguntas" class="section-faq">
+    <h2 class="section-title">Preguntas frecuentes</h2>
+    <div class="faq-list" id="faq-list"></div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-message">
+      <p class="footer-quote">"Hecho con cariño para celebrar la vida, la amistad y los años que se acumulan con sabor"</p>
+      <p class="footer-name">— Con amor para Chuy 🎂</p>
+    </div>
+    <div class="footer-socials">
+      <a href="#" class="social-link" aria-label="Instagram">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        @chuyfest
+      </a>
+      <a href="#" class="social-link" aria-label="Facebook">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        El Chuy Fest
+      </a>
+    </div>
+    <p class="footer-copy">© 2025 El Chuy Fest · Hecho con 💙</p>
+  </footer>
+
+  <!-- ========== MODAL: ACTIVIDAD ========== -->
+  <div id="activity-modal" class="modal hidden">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeActivityModal()">✕</button>
+      <div class="modal-img-wrap">
+        <img id="modal-img" src="" alt="" />
+      </div>
+      <div class="modal-body">
+        <h2 id="modal-title"></h2>
+        <p class="modal-subtitle" id="modal-subtitle"></p>
+        <p id="modal-desc"></p>
+        <button class="btn-primary" onclick="closeActivityModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL: AGREGA TU CANCIÓN ========== -->
+  <div id="song-modal" class="modal hidden">
+    <div class="modal-box small">
+      <button class="modal-close" onclick="closeSongModal()">✕</button>
+      <h2>🎵 Agrega tu canción</h2>
+      <p class="modal-subtitle">¡Arma la playlist de la fiesta!</p>
+      <form id="song-form" class="song-form">
+        <input type="text" id="song-name" placeholder="Nombre de la canción o artista" required />
+        <input type="text" id="song-link" placeholder="Link de Spotify (opcional)" />
+        <input type="text" id="song-requester" placeholder="¿Quién la pide?" required />
+        <button type="submit" class="btn-primary full">¡Agregar a la lista!</button>
+      </form>
+      <div class="song-list" id="song-list"></div>
+    </div>
+  </div>
+
+  <!-- FAB: Agrega tu canción -->
+  <button class="fab-song" onclick="openSongModal()">🎵 Agrega tu canción</button>
+
+  <!-- Django sirve el JS desde la carpeta static/ -->
+  <script src="{% static 'main.js' %}"></script>
+</body>
+</html>
