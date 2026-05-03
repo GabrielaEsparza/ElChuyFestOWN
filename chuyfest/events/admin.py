@@ -13,11 +13,11 @@ from .models import RSVP, Message, Song, GalleryPhoto
 @admin.register(RSVP)
 class RSVPAdmin(admin.ModelAdmin):
     # Columnas que aparecen en la lista del admin
-    list_display  = ['name', 'email', 'attending', 'created']
+    list_display  = ['name', 'attending', 'created']
     # Filtro lateral para ver solo los que van o los que no van
     list_filter   = ['attending']
     # Barra de búsqueda por nombre o correo
-    search_fields = ['name', 'email']
+    search_fields = ['name']
     # No se puede modificar la fecha de creación
     readonly_fields = ['created']
 

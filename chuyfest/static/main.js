@@ -142,14 +142,28 @@ function initNavbar() {
   });
 
   hamburger.addEventListener('click', () => {
-    navbar.classList.toggle('menu-open');
+    const isOpen = navbar.classList.toggle('menu-open');
+    // Cambiar el ícono: ☰ cuando cerrado, ✕ cuando abierto
+    hamburger.innerHTML = isOpen ? '&#10005;' : '&#9776;';
   });
 
+  // Cerrar al hacer click en un link
   document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => navbar.classList.remove('menu-open'));
+    link.addEventListener('click', () => {
+      navbar.classList.remove('menu-open');
+      hamburger.innerHTML = '&#9776;';
+    });
+  });
+
+  // Cerrar al tocar fuera del menú
+  document.addEventListener('click', (e) => {
+    if (navbar.classList.contains('menu-open') &&
+        !navbar.contains(e.target)) {
+      navbar.classList.remove('menu-open');
+      hamburger.innerHTML = '&#9776;';
+    }
   });
 }
-
 // =============================================
 // HERO SLIDESHOW
 // =============================================
@@ -374,8 +388,6 @@ function initRSVP() {
 
     const data = {
       name:      document.getElementById('rsvp-name').value.trim(),
-      email:     document.getElementById('rsvp-email').value.trim(),
-      // Django espera un booleano; "true" === true en el serializer
       attending: attendingValue === 'true',
     };
 
@@ -387,20 +399,17 @@ function initRSVP() {
       });
 
       if (!res.ok) {
-        // Si Django devuelve error, lo muestro en consola para debug
-        const err = await res.json();
-        console.error('Error RSVP:', err);
-        alert('Hubo un problema al guardar tu respuesta. Intenta de nuevo.');
+        console.error('Error RSVP:', await res.json());
+        alert('Hubo un problema. Intenta de nuevo.');
         return;
       }
 
-      // Éxito: ocultar form y mostrar mensaje
       form.classList.add('hidden');
       document.getElementById('rsvp-success').classList.remove('hidden');
 
     } catch (err) {
       console.error('Error de red RSVP:', err);
-      alert('No se pudo conectar con el servidor. Verifica tu conexión.');
+      alert('No se pudo conectar con el servidor.');
     }
   });
 }

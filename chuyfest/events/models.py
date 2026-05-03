@@ -11,27 +11,14 @@ from django.db import models
 
 
 class RSVP(models.Model):
-    """
-    Guarda las confirmaciones de asistencia al evento.
-    Cada vez que alguien llena el formulario del frontend, se crea un registro aquí.
-    """
-
-    # Nombre de quien confirma
-    name = models.CharField(max_length=120, verbose_name='Nombre')
-
-    # Correo para mandarle la confirmación
-    email = models.EmailField(verbose_name='Correo electrónico')
-
-    # True = sí va, False = no puede ir
+    name      = models.CharField(max_length=120, verbose_name='Nombre')
     attending = models.BooleanField(verbose_name='¿Asistirá?')
-
-    # Se llena automáticamente cuando se crea el registro
-    created = models.DateTimeField(auto_now_add=True, verbose_name='Registrado el')
+    created   = models.DateTimeField(auto_now_add=True, verbose_name='Registrado el')
 
     class Meta:
         verbose_name        = 'Confirmación de asistencia'
         verbose_name_plural = 'Confirmaciones de asistencia'
-        ordering            = ['-created']  # los más recientes primero
+        ordering            = ['-created']
 
     def __str__(self):
         estado = 'Sí va' if self.attending else 'No puede ir'

@@ -22,7 +22,7 @@ class RSVPSerializer(serializers.ModelSerializer):
     class Meta:
         model  = RSVP
         # Incluyo 'created' para que el frontend pueda mostrarlo si quiere
-        fields = ['id', 'name', 'email', 'attending', 'created']
+        fields = ['id', 'name', 'attending', 'created']
         # 'created' solo se puede leer, no mandar desde el frontend
         read_only_fields = ['id', 'created']
 
