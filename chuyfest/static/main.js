@@ -14,7 +14,7 @@ const ACTIVITIES = [
     title: 'Conferencia "La pertenencia"',
     subtitle: 'Con Viry Vargas',
     desc: 'Una conferencia de tanatología para reflexionar sobre el sentido de pertenencia, los vínculos y la vida. Un momento especial para conectar con lo que realmente importa.',
-    image: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&q=80',
+    image: '/static/assets/conferenciapertenencia.png',
     cta: 'Haz clic para más información',
   },
   {
@@ -30,7 +30,7 @@ const ACTIVITIES = [
     title: 'Balada romántica',
     subtitle: 'ReyToro1 en vivo',
     desc: 'Una hora de baladas románticas en vivo con ReyToro1. Setlist: A mi manera, Amor eterno, Mátalas, Como Quien Pierde Una Estrella, Lo Pasado Pasado, y más.',
-    image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80',
+    image: '/static/assets/musicaenvivo.png',
     cta: 'Haz clic para más información',
   },
   {
@@ -38,15 +38,15 @@ const ACTIVITIES = [
     title: 'Mañanitas y Pastel',
     subtitle: 'El momento más especial',
     desc: 'Cantamos las mañanitas, partimos el pastel y hay rifa de premios. El momento que todos esperan para celebrar al homenajeado.',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    image: '/static/assets/pastel.png',
     cta: 'Haz clic para más información',
   },
   {
     id: 5,
-    title: 'Karaoke & Bailongo',
+    title: 'Rifa sorpresa',
     subtitle: 'En bolita hasta el final',
-    desc: 'El cierre más esperado: karaoke libre y bailongo en bolita. Chuy canta "Prefiero ser su amante", Martha A. con "¿Y Qué Tal Si Funciona?" y mucho más.',
-    image: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&q=80',
+    desc: 'El cierre más esperado: quién será el afortunado?',
+    image: '/static/assets/rifa.png',
     cta: 'Haz clic para más información',
   },
 ];

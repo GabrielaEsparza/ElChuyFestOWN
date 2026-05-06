@@ -6,6 +6,7 @@ Documentación: https://docs.djangoproject.com/en/6.0/topics/settings/
 """
 
 from pathlib import Path
+import os
 
 # La ruta base del proyecto (la carpeta que contiene manage.py)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,11 +16,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SEGURIDAD
 # ─────────────────────────────────────────────
 
-SECRET_KEY = 'django-insecure-y&8=k3y$z#pw3n9qj=q@9-b%7asy9q7-vnss&o1zl7u^@ub-k_'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-y&8=k3y$z#pw3n9qj=q@9-b%7asy9q7-vnss&o1zl7u^@ub-k_')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # ─────────────────────────────────────────────
@@ -54,6 +55,10 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
+
+    # WhiteNoise va justo después de SecurityMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -71,8 +76,6 @@ ROOT_URLCONF = 'chuyfest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # BASE_DIR es la carpeta con manage.py.
-        # Dentro de ella creamos 'templates/' y ponemos el index.html ahí.
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -92,7 +95,6 @@ WSGI_APPLICATION = 'chuyfest.wsgi.application'
 # BASE DE DATOS
 # ─────────────────────────────────────────────
 
-# SQLite para desarrollo. Django crea el archivo db.sqlite3 solo.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -129,12 +131,11 @@ USE_TZ        = True
 
 STATIC_URL = '/static/'
 
-# Donde están mis archivos estáticos (styles.css, main.js).
-# Creamos una carpeta 'static/' junto al manage.py y los ponemos ahí.
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# Para cuando haga deploy (collectstatic junta todo aquí)
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # ─────────────────────────────────────────────
@@ -163,8 +164,6 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
-    # Esto desactiva la autenticación por sesión que es la que
-    # activa la validación CSRF en DRF
     'DEFAULT_AUTHENTICATION_CLASSES': [],
 }
 
@@ -172,7 +171,6 @@ REST_FRAMEWORK = {
 # CORREO ELECTRÓNICO
 # ─────────────────────────────────────────────
 
-# En desarrollo los correos se imprimen en la consola en vez de mandarse.
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Para producción:
@@ -180,8 +178,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST          = 'smtp.gmail.com'
 # EMAIL_PORT          = 587
 # EMAIL_USE_TLS       = True
-# EMAIL_HOST_USER     = 'micorreo@gmail.com'
-# EMAIL_HOST_PASSWORD = 'mi_app_password_de_google'
+# EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 # DEFAULT_FROM_EMAIL  = 'El Chuy Fest <micorreo@gmail.com>'
 
 
