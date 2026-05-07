@@ -49,7 +49,7 @@ class SongSerializer(serializers.ModelSerializer):
 
     class Meta:
         model  = Song
-        fields = ['id', 'name', 'link', 'requester', 'created']
+        fields = ['id', 'name', 'link', 'requester', 'purpose', 'created']
         read_only_fields = ['id', 'created']
 
 
