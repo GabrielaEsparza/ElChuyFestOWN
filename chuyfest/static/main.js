@@ -124,10 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initCarousel();
   initItinerary();
   initRSVP();
-  initMessages();   // carga mensajes desde Django
-  initGallery();    // carga fotos desde Django
+  initMessages();
+  initGallery();
   initFAQ();
-  initSongModal();  // carga canciones desde Django
+  initSongModal();
 });
 
 // =============================================
@@ -143,11 +143,9 @@ function initNavbar() {
 
   hamburger.addEventListener('click', () => {
     const isOpen = navbar.classList.toggle('menu-open');
-    // Cambiar el ícono: ☰ cuando cerrado, ✕ cuando abierto
     hamburger.innerHTML = isOpen ? '&#10005;' : '&#9776;';
   });
 
-  // Cerrar al hacer click en un link
   document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', () => {
       navbar.classList.remove('menu-open');
@@ -155,7 +153,6 @@ function initNavbar() {
     });
   });
 
-  // Cerrar al tocar fuera del menú
   document.addEventListener('click', (e) => {
     if (navbar.classList.contains('menu-open') &&
         !navbar.contains(e.target)) {
@@ -164,6 +161,7 @@ function initNavbar() {
     }
   });
 }
+
 // =============================================
 // HERO SLIDESHOW
 // =============================================
@@ -244,7 +242,6 @@ function renderCarousel() {
   const dotsEl = document.getElementById('carousel-dots');
   const n      = ACTIVITIES.length;
 
-  // Crear las cards solo la primera vez
   let existingCards = Array.from(stage.querySelectorAll('.carousel-card'));
   if (existingCards.length === 0) {
     ACTIVITIES.forEach((act, i) => {
@@ -264,7 +261,6 @@ function renderCarousel() {
     existingCards = Array.from(stage.querySelectorAll('.carousel-card'));
   }
 
-  // Asignar posición relativa a cada card
   existingCards.forEach(card => {
     const actIdx = parseInt(card.dataset.actIndex);
     let dist     = actIdx - carouselCenter;
@@ -293,7 +289,6 @@ function renderCarousel() {
     if (cta) cta.style.display = dist === 0 ? '' : 'none';
   });
 
-  // Dots
   dotsEl.innerHTML = '';
   ACTIVITIES.forEach((_, i) => {
     const dot = document.createElement('div');
@@ -419,7 +414,6 @@ function initRSVP() {
 //            y POST /api/messages/<id>/like/
 // =============================================
 async function initMessages() {
-  // Cargar mensajes existentes al abrir la página
   await cargarMensajes();
 
   document.getElementById('message-form').addEventListener('submit', async (e) => {
@@ -442,7 +436,6 @@ async function initMessages() {
         return;
       }
 
-      // Limpiar campos y recargar lista desde Django
       document.getElementById('msg-name').value = '';
       document.getElementById('msg-text').value = '';
       await cargarMensajes();
@@ -457,7 +450,6 @@ async function cargarMensajes() {
   try {
     const res  = await fetch('/api/messages/');
     const data = await res.json();
-    // Guardamos también si el usuario ya le dio like (solo en memoria)
     messages = data.map(m => ({ ...m, liked: false }));
     renderMessages();
   } catch (err) {
@@ -489,18 +481,15 @@ async function toggleLike(id) {
   const msg = messages.find(m => m.id === id);
   if (!msg) return;
 
-  // Actualización optimista: cambio la UI antes de esperar al servidor
   msg.liked  = !msg.liked;
   msg.likes += msg.liked ? 1 : -1;
   renderMessages();
 
   if (msg.liked) {
-    // Solo mando like al servidor si el usuario está dando like (no quitando)
     try {
       const res = await fetch(`/api/messages/${id}/like/`, { method: 'POST' });
       if (res.ok) {
         const data = await res.json();
-        // Sincronizo el conteo real que tiene Django
         msg.likes = data.likes;
         renderMessages();
       }
@@ -514,7 +503,6 @@ async function toggleLike(id) {
 // GALLERY — conectado a GET/POST /api/gallery/
 // =============================================
 async function initGallery() {
-  // Cargar fotos existentes al abrir la página
   await cargarGaleria();
 
   const input = document.getElementById('gallery-input');
@@ -522,7 +510,6 @@ async function initGallery() {
     const archivos = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
 
     for (const archivo of archivos) {
-      // Usamos FormData porque los archivos no van en JSON
       const formData = new FormData();
       formData.append('image', archivo);
 
@@ -530,8 +517,6 @@ async function initGallery() {
         const res = await fetch('/api/gallery/', {
           method: 'POST',
           body:   formData,
-          // No pongas Content-Type: el navegador lo pone automáticamente
-          // con el boundary correcto para multipart/form-data
         });
 
         if (!res.ok) {
@@ -543,7 +528,6 @@ async function initGallery() {
       }
     }
 
-    // Limpiar input y recargar galería desde Django
     input.value = '';
     await cargarGaleria();
   });
@@ -570,19 +554,15 @@ function renderGallery() {
     return;
   }
 
-  // Ocultar el placeholder cuando hay fotos
   placeholder.style.display = 'none';
 
   galleryPhotos.forEach(photo => {
     const item = document.createElement('div');
     item.className = 'gallery-item';
-    // photo.image viene de Django como URL relativa, ej: /media/gallery/foto.jpg
     item.innerHTML = `
       <img src="${photo.image}" alt="Foto del evento" loading="lazy" />
       <button class="remove-img" data-id="${photo.id}" title="Eliminar">✕</button>
     `;
-    // Nota: el botón de eliminar en producción debería pedir confirmación
-    // y llamar a DELETE /api/gallery/<id>/. Por ahora solo lo quita de la vista.
     item.querySelector('.remove-img').addEventListener('click', (e) => {
       e.stopPropagation();
       galleryPhotos = galleryPhotos.filter(p => p.id !== photo.id);
@@ -620,7 +600,6 @@ function initFAQ() {
 // SONG MODAL — conectado a GET/POST /api/songs/
 // =============================================
 async function initSongModal() {
-  // Cargar canciones existentes
   await cargarCanciones();
 
   document.getElementById('song-form').addEventListener('submit', async (e) => {
@@ -629,13 +608,18 @@ async function initSongModal() {
     const name      = document.getElementById('song-name').value.trim();
     const link      = document.getElementById('song-link').value.trim();
     const requester = document.getElementById('song-requester').value.trim();
-    if (!name || !requester) return;
+    const purpose   = document.querySelector('input[name="purpose"]:checked')?.value;
+
+    if (!name || !requester || !purpose) {
+      alert('Por favor completa todos los campos requeridos.');
+      return;
+    }
 
     try {
       const res = await fetch('/api/songs/', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ name, link, requester }),
+        body:    JSON.stringify({ name, link, requester, purpose }),
       });
 
       if (!res.ok) {
@@ -644,10 +628,12 @@ async function initSongModal() {
         return;
       }
 
-      // Limpiar campos y recargar lista
       document.getElementById('song-name').value      = '';
       document.getElementById('song-link').value      = '';
       document.getElementById('song-requester').value = '';
+      // Limpiar también el radio seleccionado
+      document.querySelectorAll('input[name="purpose"]').forEach(r => r.checked = false);
+
       await cargarCanciones();
 
     } catch (err) {
@@ -669,7 +655,6 @@ async function cargarCanciones() {
 function openSongModal() {
   document.getElementById('song-modal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
-  // Recargar canciones cada vez que se abre el modal
   cargarCanciones();
 }
 function closeSongModal() {
@@ -690,11 +675,13 @@ function renderSongs() {
   }
 
   songs.forEach(s => {
+    const purposeIcon = s.purpose === 'bailar' ? '💃' : '🎤';
     const item = document.createElement('div');
     item.className = 'song-item';
     item.innerHTML = `
       <div>
-        <strong>${escapeHtml(s.name)}</strong><br>
+        <strong>${escapeHtml(s.name)}</strong>
+        <span style="margin-left:.4rem;font-size:.85rem">${purposeIcon}</span><br>
         <span>Pedida por ${escapeHtml(s.requester)}</span>
         ${s.link ? `<br><a href="${escapeHtml(s.link)}" target="_blank" style="font-size:.78rem;color:var(--blue)">Ver en Spotify ↗</a>` : ''}
       </div>
@@ -706,8 +693,6 @@ function renderSongs() {
 // =============================================
 // HELPERS
 // =============================================
-
-// Evita que alguien inyecte HTML malicioso en los mensajes
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g,  '&amp;')

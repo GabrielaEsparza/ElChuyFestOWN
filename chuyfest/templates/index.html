@@ -40,6 +40,7 @@
 <div class="hero-slide" style="background-image: url('/static/assets/chuy5.png')"></div>
 <div class="hero-slide" style="background-image: url('/static/assets/chuy4.png')"></div>
 <div class="hero-slide" style="background-image: url('/static/assets/chuy6.png')"></div>
+<div class="hero-slide" style="background-image: url('/static/assets/chuy7.png')"></div>
     </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -206,24 +207,35 @@
     </div>
   </div>
 
-  <!-- ========== MODAL: AGREGA TU CANCIÓN ========== -->
-  <div id="song-modal" class="modal hidden">
-    <div class="modal-box small">
-      <button class="modal-close" onclick="closeSongModal()">✕</button>
-      <h2>🎵 Agrega tu canción</h2>
-      <p class="modal-subtitle">¡Arma la playlist de la fiesta!</p>
-      <form id="song-form" class="song-form">
-        <input type="text" id="song-name" placeholder="Nombre de la canción o artista" required />
-        <input type="text" id="song-link" placeholder="Link de Spotify (opcional)" />
-        <input type="text" id="song-requester" placeholder="¿Quién la pide?" required />
-        <button type="submit" class="btn-primary full">¡Agregar a la lista!</button>
-      </form>
-      <div class="song-list" id="song-list"></div>
-    </div>
-  </div>
+<!-- ========== MODAL: AGREGA TU CANCIÓN ========== -->
+<div id="song-modal" class="modal hidden">
+  <div class="modal-box small">
+    <button class="modal-close" onclick="closeSongModal()">✕</button>
+    <h2>🎵 Agrega tu canción</h2>
+    <p class="modal-subtitle">¡Arma la playlist de la fiesta!</p>
+    <form id="song-form" class="song-form">
+      <input type="text" id="song-name" placeholder="Nombre de la canción o artista" required />
+      <input type="text" id="song-link" placeholder="Link de Spotify (opcional)" />
 
-  <!-- FAB: Agrega tu canción -->
-  <button class="fab-song" onclick="openSongModal()">🎵 Agrega tu canción</button>
+      <!-- NUEVO: para cantar o bailar -->
+      <div class="song-purpose">
+        <label>
+          <input type="radio" name="purpose" value="cantar" required /> 🎤 Para cantar
+        </label>
+        <label>
+          <input type="radio" name="purpose" value="bailar" /> 💃 Para bailar
+        </label>
+      </div>
+
+      <input type="text" id="song-requester" placeholder="¿Quién la pide?" required />
+      <button type="submit" class="btn-primary full">¡Agregar a la lista!</button>
+    </form>
+    <div class="song-list" id="song-list"></div>
+  </div>
+</div>
+
+<!-- FAB: Agrega tu canción -->
+<button class="fab-song" onclick="openSongModal()">🎵 Agrega tu canción</button>
 
   <!-- Django sirve el JS desde la carpeta static/ -->
   <script src="{% static 'main.js' %}"></script>

@@ -30,16 +30,9 @@ class Message(models.Model):
     Mensajes que los invitados le dejan al cumpleañero.
     Se muestran en la sección 'Mensajes para Chuy' del frontend.
     """
-
-    # Nombre de quien escribe el mensaje
-    name = models.CharField(max_length=80, verbose_name='Nombre')
-
-    # El mensaje en sí (máximo 280 caracteres, como un tweet)
-    text = models.TextField(max_length=280, verbose_name='Mensaje')
-
-    # Contador de likes. El frontend lo incrementa con un POST a /api/messages/<id>/like/
-    likes = models.PositiveIntegerField(default=0, verbose_name='Likes')
-
+    name    = models.CharField(max_length=80, verbose_name='Nombre')
+    text    = models.TextField(max_length=280, verbose_name='Mensaje')
+    likes   = models.PositiveIntegerField(default=0, verbose_name='Likes')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Enviado el')
 
     class Meta:
@@ -48,7 +41,6 @@ class Message(models.Model):
         ordering            = ['-created']
 
     def __str__(self):
-        # Muestro los primeros 40 caracteres para que se vea bonito en el admin
         return f'{self.name}: {self.text[:40]}'
 
 
@@ -58,16 +50,21 @@ class Song(models.Model):
     Se agregan desde el modal 'Agrega tu canción' del frontend.
     """
 
-    # Nombre de la canción o del artista
-    name = models.CharField(max_length=200, verbose_name='Canción / Artista')
+    PURPOSE_CHOICES = [
+        ('cantar', 'Cantar'),
+        ('bailar', 'Bailar'),
+    ]
 
-    # Link de Spotify (opcional, por eso blank=True)
-    link = models.URLField(blank=True, verbose_name='Link de Spotify')
-
-    # Quién la está pidiendo
+    name      = models.CharField(max_length=200, verbose_name='Canción / Artista')
+    link      = models.URLField(blank=True, verbose_name='Link de Spotify')
     requester = models.CharField(max_length=80, verbose_name='La pide')
-
-    created = models.DateTimeField(auto_now_add=True, verbose_name='Pedida el')
+    purpose   = models.CharField(
+                    max_length=10,
+                    choices=PURPOSE_CHOICES,
+                    default='cantar',
+                    verbose_name='¿Para qué?'
+                )
+    created   = models.DateTimeField(auto_now_add=True, verbose_name='Pedida el')
 
     class Meta:
         verbose_name        = 'Canción'
@@ -75,7 +72,7 @@ class Song(models.Model):
         ordering            = ['-created']
 
     def __str__(self):
-        return f'{self.name} (pedida por {self.requester})'
+        return f'{self.name} (pedida por {self.requester} — {self.get_purpose_display()})'
 
 
 class GalleryPhoto(models.Model):
@@ -84,22 +81,8 @@ class GalleryPhoto(models.Model):
     Cualquier asistente puede subir fotos desde el frontend.
     Las imágenes se guardan en la carpeta media/gallery/ del servidor.
     """
-
-    # ImageField requiere que esté instalada la librería Pillow
-    # La instalé con: pip install pillow
-    # upload_to='gallery/' significa que las fotos van a media/gallery/
-    image = models.ImageField(
-        upload_to='gallery/',
-        verbose_name='Foto'
-    )
-
-    # Descripción opcional de la foto
-    caption = models.CharField(
-        max_length=200,
-        blank=True,
-        verbose_name='Descripción'
-    )
-
+    image   = models.ImageField(upload_to='gallery/', verbose_name='Foto')
+    caption = models.CharField(max_length=200, blank=True, verbose_name='Descripción')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Subida el')
 
     class Meta:
