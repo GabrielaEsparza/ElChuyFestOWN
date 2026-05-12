@@ -9,8 +9,13 @@ from .serializers import RSVPSerializer, MessageSerializer, SongSerializer, Gall
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-def perform_create(self, serializer):
-    serializer.save()
+class RSVPCreateView(generics.CreateAPIView):
+    queryset         = RSVP.objects.all()
+    serializer_class = RSVPSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class MessageListCreateView(generics.ListCreateAPIView):
