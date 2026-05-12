@@ -1,7 +1,6 @@
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
@@ -10,21 +9,8 @@ from .serializers import RSVPSerializer, MessageSerializer, SongSerializer, Gall
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class RSVPCreateView(generics.CreateAPIView):
-    queryset         = RSVP.objects.all()
-    serializer_class = RSVPSerializer
-
-    def perform_create(self, serializer):
-        rsvp = serializer.save()
-        if rsvp.attending:
-            send_mail(
-                subject='¡Te esperamos en El Chuy Fest! 🎉',
-                message=f'Hola {rsvp.name}, confirmamos tu asistencia. ¡Nos vemos el 15 de mayo!',
-                from_email='noreply@chuyfest.com',
-                recipient_list=[rsvp.email],
-                fail_silently=True,
-            )
-
+def perform_create(self, serializer):
+    serializer.save()
 
 @method_decorator(csrf_exempt, name='dispatch')
 class MessageListCreateView(generics.ListCreateAPIView):
